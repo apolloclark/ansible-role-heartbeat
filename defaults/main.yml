@@ -1,0 +1,55 @@
+---
+# https://www.elastic.co/guide/en/beats/heartbeat/current/heartbeat-overview.html
+# https://www.elastic.co/guide/en/beats/heartbeat/current/heartbeat-configuration-details.html
+elastic_url: "https://artifacts.elastic.co"
+
+# Overload variables using the dict named heartbeat
+heartbeat:
+  version: "latest"
+
+heartbeat_defaults:
+  deamon: "heartbeat"
+  version: "latest"
+  config_include_dir: "/etc/heartbeat/"
+
+  # https://www.elastic.co/guide/en/beats/heartbeat/current/configuration-general.html
+  name: ""
+  tags: ""
+  fields: ""
+  fields_under_root: "false"
+  queue_size: 1000
+  bulk_queue_size: 0
+  max_procs: ""
+
+  # https://www.elastic.co/guide/en/beats/heartbeat/current/configuration-heartbeat-options.html
+  monitors:
+    # https://www.elastic.co/guide/en/beats/heartbeat/current/configuration-heartbeat-options.html#monitor-http-options
+    http:
+      schedule: "'@every 5s'"
+      urls: '["http://localhost:80"]'
+ 
+  output:
+    # https://www.elastic.co/guide/en/beats/heartbeat/current/elasticsearch-output.html#_elasticsearch_output_options
+    elasticsearch:
+      hosts: '["localhost:9200"]'
+      # protocol: "https"
+      # username: "elastic"
+      # password: "changeme"
+    # https://www.elastic.co/guide/en/beats/heartbeat/current/logstash-output.html#_logstash_output_options
+    # logstash:
+      # hosts: '["localhost:9200"]'
+  
+  # https://www.elastic.co/guide/en/beats/heartbeat/current/configuration-logging.html#_logging_options
+  logging:
+    level: "info"
+    selectors: '["*"]'
+    to_syslog: "false"
+    to_files: "true"
+    files:
+      path: "/var/log/heartbeat"
+      name: "heartbeat.log"
+      rotateeverybytes: 10485760
+      keepfiles: 7
+    metrics:
+      enabled: "true"
+      period: "30s"

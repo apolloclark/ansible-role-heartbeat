@@ -1,0 +1,173 @@
+################### Heartbeat Configuration Example #########################
+
+# This file is an example configuration file highlighting only some common options.
+# The heartbeat.full.yml file in the same directory contains all the supported options
+# with detailed comments. You can use it for reference.
+#
+# You can find the full configuration reference here:
+# https://www.elastic.co/guide/en/beats/heartbeat/index.html
+
+############################# Heartbeat ######################################
+
+#
+#================================ General =====================================
+#
+# https://www.elastic.co/guide/en/beats/heartbeat/current/configuration-general.html
+
+# The name of the shipper that publishes the network data. It can be used to group
+# all the transactions sent by a single shipper in the web interface. Default
+# is the hostname.
+name: "{{ heartbeat_combined.name }}"
+
+# The tags of the shipper are included in their own field with each
+# transaction published.
+tags: "{{ heartbeat_combined.tags }}"
+
+# Optional fields that you can specify to add additional information to the
+# output.
+fields:
+{% for field in heartbeat_combined.fields %}
+  {{ field }}
+{% endfor %}
+
+# If this option is set to true, the custom fields are stored as top-level
+# fields in the output document instead of being grouped under a fields
+# sub-dictionary. If the custom field names conflict with other field names,
+# then the custom fields overwrite the other fields. The default value is false.
+{% if 'fields_under_root' in heartbeat_combined %}
+fields_under_root: "{{ heartbeat_combined.fields_under_root }}"
+{% endif %}
+
+# The internal queue size for single events in the processing pipeline. 
+# The default value is 1000.
+{% if 'queue_size' in heartbeat_combined %}
+queue_size: {{ heartbeat_combined.queue_size }}
+{% endif %}
+
+# (DO NOT TOUCH) The internal queue size for bulk events in the processing
+# pipeline. The default value is 0.
+{% if 'bulk_queue_size' in heartbeat_combined %}
+bulk_queue_size: {{ heartbeat_combined.bulk_queue_size }}
+{% endif %}
+
+# Sets the maximum number of CPUs that can be executing simultaneously. The
+# default is the number of logical CPUs available in the system.
+{% if 'max_procs' in heartbeat_combined and heartbeat_combined.max_procs %}
+max_procs: "{{ heartbeat_combined.max_procs }}"
+{% endif %}
+
+
+
+
+
+
+#
+#================================ Monitors =====================================
+#
+# https://www.elastic.co/guide/en/beats/heartbeat/current/configuration-heartbeat-options.html
+
+# Configure monitors
+heartbeat.monitors:
+{% for module_name, module_settings in heartbeat_combined.monitors.items() %}
+  - type: {{ module_name }}
+{% for key, val in module_settings.items() %}
+{% if val is iterable and val is not string %}
+    {{ key }}:
+{% for val2 in val %}
+      - {{ val2 }}
+{% endfor %}
+{% else %}
+    {{ key }}: {{ val }}
+{% endif %}
+{% endfor %}
+{% endfor %}
+
+
+
+
+#
+#================================ Outputs =====================================
+#
+
+# Configure what outputs to use when sending the data collected by the beat.
+# Multiple outputs may be used.
+
+#
+#-------------------------- Elasticsearch output ------------------------------
+#
+# https://www.elastic.co/guide/en/beats/heartbeat/current/elasticsearch-output.html
+
+{% if 'elasticsearch' in heartbeat_combined.output %}
+output.elasticsearch:
+  # Array of hosts to connect to.
+  hosts: {{ heartbeat_combined.output.elasticsearch.hosts }}
+
+  # Optional protocol and basic auth credentials.
+{% if 'protocol' in heartbeat_combined.output.elasticsearch %}
+  protocol: "{{ heartbeat_combined.output.elasticsearch.protocol }}"
+{% endif %}
+{% if 'username' in heartbeat_combined.output.elasticsearch %}
+  username: "{{ heartbeat_combined.output.elasticsearch.username }}"
+{% endif %}
+{% if 'password' in heartbeat_combined.output.elasticsearch %}
+  password: "{{ heartbeat_combined.output.elasticsearch.password }}"
+{% endif %}
+{% endif %}
+
+#
+#----------------------------- Logstash output --------------------------------
+#
+# https://www.elastic.co/guide/en/beats/heartbeat/current/logstash-output.html
+
+{% if 'logstash' in heartbeat_combined.output %}
+output.logstash:
+  # The Logstash hosts
+  hosts: {{ heartbeat_combined.output.logstash.hosts }}
+
+  # Optional SSL. By default is off.
+  # List of root certificates for HTTPS server verifications
+{% if 'ssl' in heartbeat_combined.output.logstash %}
+  ssl.certificate_authorities: "{{ heartbeat_combined.output.logstash.ssl.certificate_authorities }}"
+
+  # Certificate for SSL client authentication
+  ssl.certificate: "{{ heartbeat_combined.output.logstash.ssl.certificate }}"
+
+  # Client Certificate Key
+  ssl.key: "{{ heartbeat_combined.output.logstash.ssl.key }}"
+{% endif %}
+{% endif %}
+
+
+
+
+
+#
+#================================ Logging =====================================
+#
+# https://www.elastic.co/guide/en/beats/heartbeat/current/configuration-logging.html
+
+# Sets log level. The default log level is info.
+# Available log levels are: critical, error, warning, info, debug
+{% if 'logging' in heartbeat_combined %}
+logging:
+  level: {{ heartbeat_combined.logging.level }}
+
+  # At debug level, you can selectively enable logging only for some components.
+  # To enable all selectors use ["*"]. Examples of other selectors are "beat",
+  # "publish", "service".
+  selectors: {{ heartbeat_combined.logging.selectors }}
+  to_syslog: {{ heartbeat_combined.logging.to_syslog }}
+  to_files: {{ heartbeat_combined.logging.to_files }}
+{% if 'files' in heartbeat_combined.logging %}
+  files:
+    path: "{{ heartbeat_combined.logging.files.path }}"
+    name: "{{ heartbeat_combined.logging.files.name }}"
+    rotateverybytes: {{ heartbeat_combined.logging.files.rotateeverybytes }}
+    keepfiles: {{ heartbeat_combined.logging.files.keepfiles }}
+{% endif %}
+{% if 'metrics' in heartbeat_combined.logging %}
+  metrics:
+    enabled: {{ heartbeat_combined.logging.metrics.enabled }}
+    period: {{ heartbeat_combined.logging.metrics.period }}
+{% endif %}
+{% endif %}

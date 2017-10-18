@@ -1,0 +1,6 @@
+---
+- name: restart heartbeat
+  service:
+    name: "{{ heartbeat_combined.deamon }}"
+    state: restarted
+    sleep: 5

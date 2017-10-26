@@ -19,40 +19,44 @@
 # is the hostname.
 name: "{{ heartbeat_combined.name }}"
 
+{% if 'tags' in heartbeat_combined %}
 # The tags of the shipper are included in their own field with each
 # transaction published.
 tags: "{{ heartbeat_combined.tags }}"
+{% endif %}
 
+{% if 'fields' in heartbeat_combined %}
 # Optional fields that you can specify to add additional information to the
 # output.
 fields:
 {% for field in heartbeat_combined.fields %}
   {{ field }}
 {% endfor %}
+{% endif %}
 
+{% if 'fields_under_root' in heartbeat_combined %}
 # If this option is set to true, the custom fields are stored as top-level
 # fields in the output document instead of being grouped under a fields
 # sub-dictionary. If the custom field names conflict with other field names,
 # then the custom fields overwrite the other fields. The default value is false.
-{% if 'fields_under_root' in heartbeat_combined %}
 fields_under_root: "{{ heartbeat_combined.fields_under_root }}"
 {% endif %}
 
+{% if 'queue_size' in heartbeat_combined %}
 # The internal queue size for single events in the processing pipeline. 
 # The default value is 1000.
-{% if 'queue_size' in heartbeat_combined %}
 queue_size: {{ heartbeat_combined.queue_size }}
 {% endif %}
 
+{% if 'bulk_queue_size' in heartbeat_combined %}
 # (DO NOT TOUCH) The internal queue size for bulk events in the processing
 # pipeline. The default value is 0.
-{% if 'bulk_queue_size' in heartbeat_combined %}
 bulk_queue_size: {{ heartbeat_combined.bulk_queue_size }}
 {% endif %}
 
+{% if 'max_procs' in heartbeat_combined and heartbeat_combined.max_procs %}
 # Sets the maximum number of CPUs that can be executing simultaneously. The
 # default is the number of logical CPUs available in the system.
-{% if 'max_procs' in heartbeat_combined and heartbeat_combined.max_procs %}
 max_procs: "{{ heartbeat_combined.max_procs }}"
 {% endif %}
 
@@ -102,8 +106,8 @@ output.elasticsearch:
   # Array of hosts to connect to.
   hosts: {{ heartbeat_combined.output.elasticsearch.hosts }}
 
-  # Optional protocol and basic auth credentials.
 {% if 'protocol' in heartbeat_combined.output.elasticsearch %}
+  # Optional protocol and basic auth credentials.
   protocol: "{{ heartbeat_combined.output.elasticsearch.protocol }}"
 {% endif %}
 {% if 'username' in heartbeat_combined.output.elasticsearch %}
@@ -124,9 +128,9 @@ output.logstash:
   # The Logstash hosts
   hosts: {{ heartbeat_combined.output.logstash.hosts }}
 
+{% if 'ssl' in heartbeat_combined.output.logstash %}
   # Optional SSL. By default is off.
   # List of root certificates for HTTPS server verifications
-{% if 'ssl' in heartbeat_combined.output.logstash %}
   ssl.certificate_authorities: "{{ heartbeat_combined.output.logstash.ssl.certificate_authorities }}"
 
   # Certificate for SSL client authentication

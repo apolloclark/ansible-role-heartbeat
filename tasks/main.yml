@@ -45,13 +45,6 @@
 - name: Install from deb (if choosing a specific version)
   apt: deb=/opt/heartbeat.deb
   when: "heartbeat_combined.version != 'latest'"
-  
-- name: Create High-availability file
-  file:
-    name: /etc/ha.d/ha.cf
-    state: touch
-    owner: hacluster
-    group: haclient
 
 # http://docs.ansible.com/ansible/latest/template_module.html
 - name: Copy config file

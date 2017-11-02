@@ -5,12 +5,13 @@ elastic_url: "https://artifacts.elastic.co"
 
 # Overload variables using the dict named heartbeat
 heartbeat:
-  version: "latest"
+  version: "5.x"
 
 heartbeat_defaults:
-  deamon: "heartbeat"
-  version: "latest"
+  daemon: "heartbeat"
+  version: "5.x"
   config_include_dir: "/etc/heartbeat/"
+  install_only: "false"
 
   # https://www.elastic.co/guide/en/beats/heartbeat/current/configuration-general.html
   name: ""
@@ -29,15 +30,85 @@ heartbeat_defaults:
       urls: '["http://localhost:80"]'
  
   output:
-    # https://www.elastic.co/guide/en/beats/heartbeat/current/elasticsearch-output.html#_elasticsearch_output_options
+    # https://www.elastic.co/guide/en/beats/heartbeat/current/elasticsearch-output.html
     elasticsearch:
-      hosts: '["localhost:9200"]'
-      # protocol: "https"
-      # username: "elastic"
-      # password: "changeme"
-    # https://www.elastic.co/guide/en/beats/heartbeat/current/logstash-output.html#_logstash_output_options
-    # logstash:
-      # hosts: '["localhost:9200"]'
+      enabled: "true"
+      hosts: ""
+      compression_level: 0
+      worker: 1
+      username: ""
+      password: ""
+      parameters: {}
+      protocol: "http"
+      path: ""
+      headers: {}
+      proxy_url: ""
+      index: 'heartbeat-%{+yyyy.MM.dd}'
+      indices: {}
+      pipeline: ""
+      pipelines: {}
+      template:
+        enabled: "true"
+        name: "heartbeat"
+        path: "heartbeat.template.json"
+        overwrite: "false"
+        version:
+          2x:
+            enabled: "false"
+            path: "heartbeat.template-es2x.json"
+          6x:
+            enabled: "false"
+            path: "heartbeat.template-es6x.json"
+      max_retries: 3
+      bulk_max_size: 50
+      timeout: 90
+      flush_interval: ""
+      # https://www.elastic.co/guide/en/beats/heartbeat/current/configuration-output-ssl.html
+      # ssl:
+        # certificate_authorities: ["/etc/pki/root/ca.pem"]
+        # certificate: "/etc/pki/client/cert.pem"
+        # key: "/etc/pki/client/cert.key"
+
+    # https://www.elastic.co/guide/en/beats/heartbeat/current/logstash-output.html
+    logstash:
+      enabled: "true"
+      hosts: '["localhost:5044"]'
+      compression_level: 3
+      worker: 1
+      loadbalance: "true"
+      pipelining: 0
+      proxy_url: ""
+      proxy_use_local_resolver: "false"
+      index: "heartbeat"
+      # https://www.elastic.co/guide/en/beats/heartbeat/current/configuration-output-ssl.html
+      # ssl:
+        # certificate_authorities: ["/etc/pki/root/ca.pem"]
+        # certificate: "/etc/pki/client/cert.pem"
+        # key: "/etc/pki/client/cert.key"
+      timeout: 30
+      max_retries: 3
+      bulk_max_size: 2048
+      slow_start: "false"
+      
+    kafka:
+      enabled: "false"
+      
+    redis:
+      enabled: "false"
+
+    # https://www.elastic.co/guide/en/beats/heartbeat/current/file-output.html
+    file:
+      enabled: "true"
+      path: "/tmp/heartbeat"
+      filename: "heartbeat"
+      rotate_every_kb: 10240
+      number_of_files: 7
+
+    # https://www.elastic.co/guide/en/beats/heartbeat/current/console-output.html
+    console:
+      enabled: "true"
+      pretty: "false"
+      bulk_max_size: 2048
   
   # https://www.elastic.co/guide/en/beats/heartbeat/current/configuration-logging.html#_logging_options
   logging:

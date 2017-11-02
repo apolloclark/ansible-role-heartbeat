@@ -1,6 +1,6 @@
 ---
 - name: restart heartbeat
   service:
-    name: "{{ heartbeat_combined.deamon }}"
+    name: "{{ heartbeat_combined.daemon }}"
     state: restarted
     sleep: 5

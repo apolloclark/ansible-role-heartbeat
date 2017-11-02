@@ -17,16 +17,18 @@
   apt_repository:
     repo: 'deb https://artifacts.elastic.co/packages/5.x/apt stable main'
     state: present
+  when: "heartbeat_combined.version == '5.x'"
 
 - name: Update apt cache
   apt: update_cache=yes
+  when: "heartbeat_combined.version == '5.x'"
 
-- name: Install from repo (if choosing the latest version)
+- name: Install from repo (if choosing the 5.x version)
   apt:
     name: heartbeat
     default_release: stable
     state: installed
-  when: "heartbeat_combined.version == 'latest'"
+  when: "heartbeat_combined.version == '5.x'"
 
 - name: Get the platform (i386 or amd64) of the virtual machine
   command: dpkg --print-architecture
@@ -40,11 +42,11 @@
   get_url:
     url={{ elastic_url }}/downloads/beats/heartbeat/heartbeat-{{ heartbeat_combined.version }}-{{ platform }}.deb
     dest=/opt/heartbeat.deb
-  when: "heartbeat_combined.version != 'latest'"
+  when: "heartbeat_combined.version != '5.x'"
 
 - name: Install from deb (if choosing a specific version)
   apt: deb=/opt/heartbeat.deb
-  when: "heartbeat_combined.version != 'latest'"
+  when: "heartbeat_combined.version != '5.x'"
 
 # http://docs.ansible.com/ansible/latest/template_module.html
 - name: Copy config file
@@ -55,3 +57,10 @@
     group: root
     mode: 0644
   notify: restart heartbeat
+  when: "heartbeat_combined.install_only != 'true'"
+
+- name: Restart Heartbeat
+  service:
+    name: "{{ heartbeat_combined.daemon }}"
+    state: restarted
+    sleep: 15

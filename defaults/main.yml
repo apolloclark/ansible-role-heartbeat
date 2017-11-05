@@ -32,7 +32,7 @@ heartbeat_defaults:
   output:
     # https://www.elastic.co/guide/en/beats/heartbeat/current/elasticsearch-output.html
     elasticsearch:
-      enabled: "true"
+      enabled: "false"
       hosts: ""
       compression_level: 0
       worker: 1
@@ -98,7 +98,7 @@ heartbeat_defaults:
 
     # https://www.elastic.co/guide/en/beats/heartbeat/current/file-output.html
     file:
-      enabled: "true"
+      enabled: "false"
       path: "/tmp/heartbeat"
       filename: "heartbeat"
       rotate_every_kb: 10240
@@ -106,7 +106,7 @@ heartbeat_defaults:
 
     # https://www.elastic.co/guide/en/beats/heartbeat/current/console-output.html
     console:
-      enabled: "true"
+      enabled: "false"
       pretty: "false"
       bulk_max_size: 2048
   

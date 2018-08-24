@@ -2,12 +2,12 @@
 
 heartbeat_defaults:
   daemon: "heartbeat-elastic"
-  version: "6.3.0"
+  version: "6.4.0"
   config_include_dir: "/etc/heartbeat/"
   install_only: false
   install_repo: true
 
-  # https://www.elastic.co/guide/en/beats/heartbeat/6.3/configuration-general.html
+  # https://www.elastic.co/guide/en/beats/heartbeat/6.4/configuration-general.html
   name: ""
   tags: ""
   fields: ""
@@ -16,18 +16,18 @@ heartbeat_defaults:
   bulk_queue_size: 0
   max_procs: ""
 
-  # https://www.elastic.co/guide/en/beats/heartbeat/6.3/configuration-heartbeat-options.html
+  # https://www.elastic.co/guide/en/beats/heartbeat/6.4/configuration-heartbeat-options.html
   monitors:
-    # https://www.elastic.co/guide/en/beats/heartbeat/6.3/configuration-heartbeat-options.html#monitor-http-options
+    # https://www.elastic.co/guide/en/beats/heartbeat/6.4/configuration-heartbeat-options.html#monitor-http-options
     http:
       schedule: "'@every 5s'"
       urls: '["http://localhost:80"]'
 
-  # https://www.elastic.co/guide/en/beats/heartbeat/6.3/defining-processors.html
+  # https://www.elastic.co/guide/en/beats/heartbeat/6.4/defining-processors.html
   processors: []
 
   output:
-    # https://www.elastic.co/guide/en/beats/heartbeat/6.3/elasticsearch-output.html
+    # https://www.elastic.co/guide/en/beats/heartbeat/6.4/elasticsearch-output.html
     elasticsearch:
       enabled: false
       hosts:
@@ -50,7 +50,7 @@ heartbeat_defaults:
       timeout: 90
       ssl: []
 
-    # https://www.elastic.co/guide/en/beats/heartbeat/6.3/logstash-output.html
+    # https://www.elastic.co/guide/en/beats/heartbeat/6.4/logstash-output.html
     logstash:
       enabled: false
       hosts:
@@ -69,7 +69,7 @@ heartbeat_defaults:
       proxy_use_local_resolver: false
       ssl: []
 
-    # https://www.elastic.co/guide/en/beats/heartbeat/6.3/kafka-output.html
+    # https://www.elastic.co/guide/en/beats/heartbeat/6.4/kafka-output.html
     kafka:
       enabled: false
       hosts:
@@ -103,7 +103,7 @@ heartbeat_defaults:
       
     redis: []
 
-    # https://www.elastic.co/guide/en/beats/heartbeat/6.3/file-output.html
+    # https://www.elastic.co/guide/en/beats/heartbeat/6.4/file-output.html
     file:
       enabled: false
       path: "/tmp/heartbeat"
@@ -111,13 +111,13 @@ heartbeat_defaults:
       rotate_every_kb: 10240
       number_of_files: 7
 
-    # https://www.elastic.co/guide/en/beats/heartbeat/6.3/console-output.html
+    # https://www.elastic.co/guide/en/beats/heartbeat/6.4/console-output.html
     console:
       enabled: false
       pretty: false
       bulk_max_size: 2048
 
-  # https://www.elastic.co/guide/en/beats/heartbeat/6.3/configuration-path.html
+  # https://www.elastic.co/guide/en/beats/heartbeat/6.4/configuration-path.html
   paths:
     home: ""
     config: ""
@@ -125,7 +125,7 @@ heartbeat_defaults:
     logs: ""
 
   setup:
-    # https://www.elastic.co/guide/en/beats/heartbeat/6.3/configuration-dashboards.html
+    # https://www.elastic.co/guide/en/beats/heartbeat/6.4/configuration-dashboards.html
     dashboards:
       enabled: false
       directory: '${path.home}/kibana'
@@ -137,7 +137,7 @@ heartbeat_defaults:
       always_kibana: true
       retry.enabled: true
 
-    # https://www.elastic.co/guide/en/beats/heartbeat/6.3/configuration-template.html
+    # https://www.elastic.co/guide/en/beats/heartbeat/6.4/configuration-template.html
     template:
       enabled: false
       name: "heartbeat"
@@ -146,7 +146,7 @@ heartbeat_defaults:
       overwrite: false
       settings: []
 
-    # https://www.elastic.co/guide/en/beats/heartbeat/6.3/setup-kibana-endpoint.html
+    # https://www.elastic.co/guide/en/beats/heartbeat/6.4/setup-kibana-endpoint.html
     kibana:
       host: "127.0.0.1:5601"
       protocol: "http"
@@ -155,7 +155,7 @@ heartbeat_defaults:
       path: ""
       ssl: []
 
-  # https://www.elastic.co/guide/en/beats/heartbeat/6.3/configuration-logging.html
+  # https://www.elastic.co/guide/en/beats/heartbeat/6.4/configuration-logging.html
   logging:
     level: "info"
     selectors: '["*"]'

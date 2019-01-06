@@ -61,9 +61,6 @@ max_procs: "{{ heartbeat_combined.max_procs }}"
 
 
 
-
-
-
 #
 #================================ Monitors =====================================
 #
@@ -84,7 +81,6 @@ heartbeat.monitors:
 {% endif %}
 {% endfor %}
 {% endfor %}
-
 
 
 
@@ -532,7 +528,6 @@ output:
 
 
 
-
 ############################# Logging #########################################
 #
 # https://www.elastic.co/guide/en/beats/heartbeat/current/configuration-logging.html
@@ -597,4 +592,3 @@ logging:
     period: {{ heartbeat_combined.logging.metrics.period }}
 {% endif %}
 {% endif %}
-
